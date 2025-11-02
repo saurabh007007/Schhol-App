@@ -1,6 +1,9 @@
-export interface Login {
-  name: string;
+export interface LoginType {
+  name?: string;
   email: string;
-  phoneNumber: string;
+  phoneNumber?: string;
   password: string;
+  roles?: string;
 }
+
+// in Admin.types.ts
