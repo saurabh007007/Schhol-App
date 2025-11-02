@@ -41,7 +41,7 @@ export const Signup = async (req: Request, res: Response): Promise<void> => {
       },
     });
     const token = jwt.sign(
-      { userId: newUser.id, roles: newUser.roles },
+      { userId: newUser.id, roles: newUser.roles, email: newUser.email },
       process.env.JWT_SECRET as string,
       { expiresIn: "1h" }
     );
@@ -87,7 +87,7 @@ export const Login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     const token = jwt.sign(
-      { userId: user.id, roles: user.roles },
+      { userId: user.id, roles: user.roles, email: user.email },
       process.env.JWT_SECRET as string,
       { expiresIn: "1h" }
     );
