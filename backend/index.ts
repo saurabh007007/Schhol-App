@@ -1,7 +1,13 @@
 import express from "express";
 import authRoutes from "./routes/auth.routes";
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+
+dotenv.config();
+console.log("process.env.JWT_SECRET", process.env.JWT_SECRET);
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 //auth routes
 app.use("/api/v2/auth", authRoutes);

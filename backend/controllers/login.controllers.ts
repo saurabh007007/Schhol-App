@@ -106,3 +106,31 @@ export const Login = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const getUserProfile = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const userId = req.user?.email;
+  if (!userId) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+  const user = await prisma.user.findUnique({
+    where: { email: userId },
+  });
+  if (!user) {
+    res.status(404).json({ message: "User not found" });
+    return;
+  }
+  res.status(200).json({ user });
+};
+
+export const Logout = async (req: Request, res: Response): Promise<void> => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+  });
+  res.status(200).json({ message: "Logout successful" });
+};
