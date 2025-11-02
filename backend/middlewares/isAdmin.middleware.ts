@@ -19,7 +19,7 @@ declare global {
   }
 }
 
-export const authenticateUser = async (
+export const isAdmin = async (
   req: Request,
   res: Response,
   next: NextFunction
