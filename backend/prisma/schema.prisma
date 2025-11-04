@@ -99,7 +99,7 @@ model Student {
   zipCode     String
   country     String
   photo       String?
-  email       String?  @unique
+  email       String?  
   status      Status   @default(ACTIVE)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

@@ -1,23 +1,7 @@
-import { type Request, type Response, type NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import prisma from "../utility/prisma";
-
-interface JwtPayload {
-  userId: string;
-  roles: string;
-}
-
-declare global {
-  namespace Express {
-    interface Request {
-      user?: {
-        id: number;
-        roles: string;
-        email?: string;
-      };
-    }
-  }
-}
+import { type Request, type Response, type NextFunction } from "express";
+import dotenv from "dotenv";
+dotenv.config();
 
 export const isAdmin = async (
   req: Request,
@@ -25,40 +9,18 @@ export const isAdmin = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    // Get token from cookie or Authorization header
-    const token =
-      req.cookies?.token ||
-      (req.headers.authorization?.startsWith("Bearer ")
-        ? req.headers.authorization.split(" ")[1]
-        : null);
-
-    if (!token) {
-      res.status(401).json({ message: "Authentication required" });
-      return;
+    const { roles, email } = req.user as {
+      userId: string;
+      email: string;
+      roles: string;
+    };
+    if (roles === "ADMIN") {
+      next();
+    } else {
+      res.status(403).json({ message: "Access denied. Admins only." });
     }
-
-    // Verify token
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET as string
-    ) as JwtPayload;
-
-    // Fetch the user from database (optional but safer)
-    const user = await prisma.user.findUnique({
-      where: { id: Number(decoded.userId), email: decoded.roles },
-    });
-
-    if (!user) {
-      res.status(401).json({ message: "User not found or invalid token" });
-      return;
-    }
-
-    // Attach user to request
-    req.user = { id: user.id, roles: user.roles };
-
-    next();
+    return;
   } catch (error) {
-    console.error("Auth error:", error);
-    res.status(403).json({ message: "Invalid or expired token" });
+    console.log(error);
   }
 };

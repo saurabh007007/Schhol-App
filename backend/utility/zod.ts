@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const studentSchema = z.object({
+export const studentSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   fatherName: z.string(),
