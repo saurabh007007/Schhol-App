@@ -1,10 +1,17 @@
-
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import Login from "./components/auth/Login";
 function App() {
 
 
   return (
     <>
-      <div className='bg-red-500'> Saurabh</div>
+
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<div>Signup</div>} />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
