@@ -110,21 +110,15 @@ export const updateStudent = async (
       res.status(400).json({ message: "Student id is required in params." });
       return;
     }
-    const id = parseInt(idParam, 10);
-    if (Number.isNaN(id)) {
-      res.status(400).json({ message: "Invalid student id." });
-      return;
-    }
+    const id = idParam;
 
     if (!req.user || req.user.roles !== "ADMIN") {
       res.status(403).json({ message: "Access denied. Admins only." });
       return;
     }
 
-    // allow partial updates
     const updateData = studentSchema.partial().parse(req.body);
 
-    // basic validation for phone number if provided
     if (updateData.phoneNumber && updateData.phoneNumber.length < 10) {
       res
         .status(400)
@@ -132,7 +126,6 @@ export const updateStudent = async (
       return;
     }
 
-    // map `class` field name safely
     const { class: studentClass, ...rest } = updateData as any;
 
     const dataToUpdate: any = { ...rest };
