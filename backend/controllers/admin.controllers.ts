@@ -99,3 +99,68 @@ export const addStudents = async (
     });
   }
 };
+
+export const updateStudent = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const idParam = req.params.id;
+    if (!idParam) {
+      res.status(400).json({ message: "Student id is required in params." });
+      return;
+    }
+    const id = parseInt(idParam, 10);
+    if (Number.isNaN(id)) {
+      res.status(400).json({ message: "Invalid student id." });
+      return;
+    }
+
+    if (!req.user || req.user.roles !== "ADMIN") {
+      res.status(403).json({ message: "Access denied. Admins only." });
+      return;
+    }
+
+    // allow partial updates
+    const updateData = studentSchema.partial().parse(req.body);
+
+    // basic validation for phone number if provided
+    if (updateData.phoneNumber && updateData.phoneNumber.length < 10) {
+      res
+        .status(400)
+        .json({ message: "Phone number must be at least 10 digits." });
+      return;
+    }
+
+    // map `class` field name safely
+    const { class: studentClass, ...rest } = updateData as any;
+
+    const dataToUpdate: any = { ...rest };
+    if (studentClass !== undefined) dataToUpdate.class = studentClass;
+
+    if (Object.keys(dataToUpdate).length === 0) {
+      res.status(400).json({ message: "No valid fields provided to update." });
+      return;
+    }
+
+    const updatedStudent = await prisma.student.update({
+      where: { id },
+      data: dataToUpdate,
+    });
+
+    res.status(200).json({
+      message: "Student updated successfully",
+      student: updatedStudent,
+    });
+  } catch (error: any) {
+    // handle not found error from Prisma
+    if (error?.code === "P2025") {
+      res.status(404).json({ message: "Student not found." });
+      return;
+    }
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
