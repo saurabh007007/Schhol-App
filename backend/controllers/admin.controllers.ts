@@ -157,3 +157,5 @@ export const updateStudent = async (
     });
   }
 };
+
+export const addTecaher=async()
