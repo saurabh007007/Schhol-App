@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { ChangeEvent, FormEvent, useState } from "react"
 import axios from "axios";
 
 const Login = () => {
@@ -7,13 +7,13 @@ const Login = () => {
         email: "",
         password: ""
     });
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         });
     }
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, formData, {
             withCredentials: true
@@ -27,7 +27,7 @@ const Login = () => {
     }
     return (
         <div className="flex items-center justify-center h-screen">
-            <form action="">
+            <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                         Email
@@ -59,8 +59,7 @@ const Login = () => {
                 <div className="flex items-center justify-between">
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="button"
-                        onClick={handleSubmit}
+                        type="submit"
                     >
                         Sign In
                     </button>
