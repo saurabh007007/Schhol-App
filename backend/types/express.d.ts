@@ -1,11 +1,10 @@
 declare namespace Express {
   export interface User {
     id: number;
-    roles: "ADMIN" | "USER" | string;
-    email?: string;
-    // add other fields your auth sets here
+    role: string;
+    email: string;
   }
   export interface Request {
-    user?: User;
+    user: User;
   }
 }
