@@ -28,5 +28,8 @@
     "nodemailer": "^7.0.10",
     "prisma": "^6.18.0",
     "zod": "^4.1.12"
+  },
+  "prisma": {
+    "seed": "bun run prisma/seed.ts"
   }
 }

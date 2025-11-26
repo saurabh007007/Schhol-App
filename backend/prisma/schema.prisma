@@ -109,37 +109,37 @@ enum VehicleType {
 // Core & Settings
 
 model SchoolProfile {
-  id            Int      @id @default(autoincrement())
-  name          String
-  address       String
-  phone         String
-  email         String
-  website       String?
-  logo          String?
-  currency      String   @default("USD")
-  language      String   @default("en")
-  timezone      String   @default("UTC")
-  academicYear  String   // e.g., "2023-2024"
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           Int      @id @default(autoincrement())
+  name         String
+  address      String
+  phone        String
+  email        String
+  website      String?
+  logo         String?
+  currency     String   @default("USD")
+  language     String   @default("en")
+  timezone     String   @default("UTC")
+  academicYear String // e.g., "2023-2024"
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model AcademicYear {
   id        Int      @id @default(autoincrement())
-  name      String   // e.g., "2023-2024"
+  name      String // e.g., "2023-2024"
   startDate DateTime
   endDate   DateTime
   isCurrent Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
-  sessions  Session[]
-  students  Student[] // Students enrolled in this year
+
+  sessions Session[]
+  students Student[] // Students enrolled in this year
 }
 
 model Session {
   id             Int          @id @default(autoincrement())
-  name           String       // e.g., "Term 1"
+  name           String // e.g., "Term 1"
   startDate      DateTime
   endDate        DateTime
   academicYearId Int
@@ -151,34 +151,34 @@ model Session {
 // User Management
 
 model User {
-  id          Int      @id @default(autoincrement())
-  username    String   @unique // Generated or email
-  password    String
-  email       String?  @unique
-  phone       String?  @unique
-  role        Role     @default(STUDENT)
-  status      Status   @default(ACTIVE)
-  avatar      String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  username  String   @unique // Generated or email
+  password  String
+  email     String?  @unique
+  phone     String?  @unique
+  role      Role     @default(STUDENT)
+  status    Status   @default(ACTIVE)
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  student     Student?
-  staff       Staff?
-  parent      Parent?
-  
-  sentMessages     Message[] @relation("SentMessages")
-  receivedMessages Message[] @relation("ReceivedMessages")
+  student Student?
+  staff   Staff?
+  parent  Parent?
+
+  sentMessages     Message[]      @relation("SentMessages")
+  receivedMessages Message[]      @relation("ReceivedMessages")
   notifications    Notification[]
 
   @@map("users")
 }
 
 model Staff {
-  id            Int       @id @default(autoincrement())
-  userId        Int       @unique
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+  id     Int  @id @default(autoincrement())
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   firstName     String
   lastName      String
   dateOfBirth   DateTime
@@ -187,23 +187,23 @@ model Staff {
   experience    String?
   address       String?
   joiningDate   DateTime
-  designation   String    // e.g., "Senior Teacher", "Driver"
+  designation   String // e.g., "Senior Teacher", "Driver"
   departmentId  Int?
   department    Department? @relation(fields: [departmentId], references: [id])
-  
-  salary        Float?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+
+  salary Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  classes       Class[]   @relation("ClassTeacher")
-  subjects      SubjectAllocation[]
-  attendance    StaffAttendance[]
-  leaves        LeaveApplication[]
+  classes         Class[]             @relation("ClassTeacher")
+  subjects        SubjectAllocation[]
+  attendance      StaffAttendance[]
+  leaves          LeaveApplication[]
   transportRoutes TransportRoute[] // Driver for routes
-  bookIssues    BookIssue[]
-  
+  bookIssues      BookIssue[]
+
   @@map("staff")
 }
 
@@ -211,92 +211,93 @@ model Department {
   id          Int      @id @default(autoincrement())
   name        String   @unique
   description String?
-  headId      Int?     // HOD
+  headId      Int? // HOD
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  
-  staff       Staff[]
+
+  staff Staff[]
 }
 
 model Student {
-  id            Int       @id @default(autoincrement())
-  userId        Int       @unique
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  admissionNo   String    @unique
-  rollNumber    String?
-  firstName     String
-  lastName      String
-  dateOfBirth   DateTime
-  gender        Gender
-  bloodGroup    BloodGroup?
-  religion      Religion?
-  category      String?   // General, OBC, SC, ST etc.
-  
-  classId       Int
-  class         Class     @relation(fields: [classId], references: [id])
-  sectionId     Int
-  section       Section   @relation(fields: [sectionId], references: [id])
-  
+  id     Int  @id @default(autoincrement())
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  admissionNo String      @unique
+  rollNumber  String?
+  firstName   String
+  lastName    String
+  dateOfBirth DateTime
+  gender      Gender
+  bloodGroup  BloodGroup?
+  religion    Religion?
+  category    String? // General, OBC, SC, ST etc.
+
+  classId   Int
+  class     Class   @relation(fields: [classId], references: [id])
+  sectionId Int
+  section   Section @relation(fields: [sectionId], references: [id])
+
   academicYearId Int
   academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
 
-  parentId      Int?
-  parent        Parent?   @relation(fields: [parentId], references: [id])
-  
-  address       String?
-  city          String?
-  state         String?
-  zipCode       String?
-  country       String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  parentId Int?
+  parent   Parent? @relation(fields: [parentId], references: [id])
+
+  address String?
+  city    String?
+  state   String?
+  zipCode String?
+  country String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  attendance    StudentAttendance[]
-  marks         ExamResult[]
-  fees          StudentFee[]
-  issuedBooks   BookIssue[]
+  attendance           StudentAttendance[]
+  marks                ExamResult[]
+  fees                 StudentFee[]
+  issuedBooks          BookIssue[]
   transportMemberships TransportMember[]
-  homework      HomeworkSubmission[]
-  certificates  Certificate[]
-  disciplinary  DisciplineRecord[]
-  
+  homework             HomeworkSubmission[]
+  certificates         Certificate[]
+  disciplinary         DisciplineRecord[]
+
   @@map("students")
 }
 
 model Parent {
-  id            Int       @id @default(autoincrement())
-  userId        Int       @unique
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  fatherName    String
-  motherName    String
-  guardianName  String?
-  occupation    String?
-  income        String?
-  address       String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id     Int  @id @default(autoincrement())
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  students      Student[]
-  
+  fatherName   String
+  motherName   String
+  guardianName String?
+  occupation   String?
+  income       String?
+  address      String?
+  phone        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  students Student[]
+
   @@map("parents")
 }
 
 // Academic Management
 
 model Class {
-  id            Int       @id @default(autoincrement())
-  name          String    @unique // Class 1, Class 2
-  numeric       Int?      // 1, 2, 3 for sorting
+  id             Int    @id @default(autoincrement())
+  name           String @unique // Class 1, Class 2
+  numeric        Int? // 1, 2, 3 for sorting
   classTeacherId Int?
-  classTeacher  Staff?    @relation("ClassTeacher", fields: [classTeacherId], references: [id])
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  classTeacher   Staff? @relation("ClassTeacher", fields: [classTeacherId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   sections      Section[]
   students      Student[]
@@ -308,27 +309,27 @@ model Class {
 }
 
 model Section {
-  id            Int       @id @default(autoincrement())
-  name          String    // A, B, C
-  classId       Int
-  class         Class     @relation(fields: [classId], references: [id], onDelete: Cascade)
-  capacity      Int?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id       Int    @id @default(autoincrement())
+  name     String // A, B, C
+  classId  Int
+  class    Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
+  capacity Int?
 
-  students      Student[]
-  timeTable     TimeTable[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  students  Student[]
+  timeTable TimeTable[]
 }
 
 model Subject {
-  id            Int       @id @default(autoincrement())
-  name          String
-  code          String?
-  type          String?   // Theory, Practical
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id   Int     @id @default(autoincrement())
+  name String
+  code String?
+  type String? // Theory, Practical
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   allocations   SubjectAllocation[]
   examSchedules ExamSchedule[]
@@ -336,556 +337,556 @@ model Subject {
 }
 
 model SubjectAllocation {
-  id            Int       @id @default(autoincrement())
-  classId       Int
-  class         Class     @relation(fields: [classId], references: [id])
-  subjectId     Int
-  subject       Subject   @relation(fields: [subjectId], references: [id])
-  teacherId     Int?
-  teacher       Staff?    @relation(fields: [teacherId], references: [id])
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id        Int     @id @default(autoincrement())
+  classId   Int
+  class     Class   @relation(fields: [classId], references: [id])
+  subjectId Int
+  subject   Subject @relation(fields: [subjectId], references: [id])
+  teacherId Int?
+  teacher   Staff?  @relation(fields: [teacherId], references: [id])
 
-  homework      Homework[]
-  exams         Exam[]
-  timeTable     TimeTable[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  homework  Homework[]
+  exams     Exam[]
+  timeTable TimeTable[]
 }
 
 model TimeTable {
-  id            Int       @id @default(autoincrement())
-  classId       Int
-  class         Class     @relation(fields: [classId], references: [id])
-  sectionId     Int?
-  section       Section?  @relation(fields: [sectionId], references: [id])
-  subjectId     Int?      // Can be null for break/assembly
-  subject       SubjectAllocation? @relation(fields: [subjectId], references: [id])
-  
-  dayOfWeek     String    // Monday, Tuesday...
-  startTime     String    // "09:00"
-  endTime       String    // "10:00"
-  roomNo        String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id        Int                @id @default(autoincrement())
+  classId   Int
+  class     Class              @relation(fields: [classId], references: [id])
+  sectionId Int?
+  section   Section?           @relation(fields: [sectionId], references: [id])
+  subjectId Int? // Can be null for break/assembly
+  subject   SubjectAllocation? @relation(fields: [subjectId], references: [id])
+
+  dayOfWeek String // Monday, Tuesday...
+  startTime String // "09:00"
+  endTime   String // "10:00"
+  roomNo    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Attendance Management
 
 model StudentAttendance {
-  id            Int       @id @default(autoincrement())
-  studentId     Int
-  student       Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  date          DateTime
-  status        AttendanceStatus
-  remark        String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id        Int              @id @default(autoincrement())
+  studentId Int
+  student   Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  date      DateTime
+  status    AttendanceStatus
+  remark    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([studentId, date])
 }
 
 model StaffAttendance {
-  id            Int       @id @default(autoincrement())
-  staffId       Int
-  staff         Staff     @relation(fields: [staffId], references: [id], onDelete: Cascade)
-  date          DateTime
-  status        AttendanceStatus
-  checkIn       DateTime?
-  checkOut      DateTime?
-  remark        String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id       Int              @id @default(autoincrement())
+  staffId  Int
+  staff    Staff            @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  date     DateTime
+  status   AttendanceStatus
+  checkIn  DateTime?
+  checkOut DateTime?
+  remark   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([staffId, date])
 }
 
 model LeaveApplication {
-  id            Int       @id @default(autoincrement())
-  staffId       Int
-  staff         Staff     @relation(fields: [staffId], references: [id])
-  type          String    // Sick, Casual
-  startDate     DateTime
-  endDate       DateTime
-  reason        String
-  status        LeaveStatus @default(PENDING)
-  approvedBy    Int?      // User ID of approver
+  id              Int         @id @default(autoincrement())
+  staffId         Int
+  staff           Staff       @relation(fields: [staffId], references: [id])
+  type            String // Sick, Casual
+  startDate       DateTime
+  endDate         DateTime
+  reason          String
+  status          LeaveStatus @default(PENDING)
+  approvedBy      Int? // User ID of approver
   rejectionReason String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Holiday {
-  id            Int       @id @default(autoincrement())
-  title         String
-  startDate     DateTime
-  endDate       DateTime
-  description   String?
-  type          String?   // Public, School specific
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id          Int      @id @default(autoincrement())
+  title       String
+  startDate   DateTime
+  endDate     DateTime
+  description String?
+  type        String? // Public, School specific
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Homework & Lesson Management
 
 model Homework {
-  id            Int       @id @default(autoincrement())
-  classId       Int
-  class         Class     @relation(fields: [classId], references: [id])
-  subjectId     Int
-  subject       SubjectAllocation @relation(fields: [subjectId], references: [id])
-  
-  title         String
-  description   String?
-  assignedDate  DateTime
-  dueDate       DateTime
-  attachment    String?   // File URL
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id        Int               @id @default(autoincrement())
+  classId   Int
+  class     Class             @relation(fields: [classId], references: [id])
+  subjectId Int
+  subject   SubjectAllocation @relation(fields: [subjectId], references: [id])
 
-  submissions   HomeworkSubmission[]
+  title        String
+  description  String?
+  assignedDate DateTime
+  dueDate      DateTime
+  attachment   String? // File URL
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  submissions HomeworkSubmission[]
 }
 
 model HomeworkSubmission {
-  id            Int       @id @default(autoincrement())
-  homeworkId    Int
-  homework      Homework  @relation(fields: [homeworkId], references: [id])
-  studentId     Int
-  student       Student   @relation(fields: [studentId], references: [id])
-  
+  id         Int      @id @default(autoincrement())
+  homeworkId Int
+  homework   Homework @relation(fields: [homeworkId], references: [id])
+  studentId  Int
+  student    Student  @relation(fields: [studentId], references: [id])
+
   submissionDate DateTime @default(now())
-  attachment    String?
-  remarks       String?
-  grade         String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  attachment     String?
+  remarks        String?
+  grade          String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Exam & Quiz Module
 
 model Exam {
-  id            Int       @id @default(autoincrement())
-  name          String    // Mid-Term, Final
-  startDate     DateTime
-  endDate       DateTime
-  description   String?
-  
+  id          Int      @id @default(autoincrement())
+  name        String // Mid-Term, Final
+  startDate   DateTime
+  endDate     DateTime
+  description String?
+
   subjectAllocationId Int?
   subjectAllocation   SubjectAllocation? @relation(fields: [subjectAllocationId], references: [id])
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
 
-  schedules     ExamSchedule[]
-  results       ExamResult[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  schedules ExamSchedule[]
+  results   ExamResult[]
 }
 
 model ExamSchedule {
-  id            Int       @id @default(autoincrement())
-  examId        Int
-  exam          Exam      @relation(fields: [examId], references: [id])
-  classId       Int
-  class         Class     @relation(fields: [classId], references: [id])
-  subjectId     Int
-  subject       Subject   @relation(fields: [subjectId], references: [id])
-  
-  date          DateTime
-  startTime     String
-  endTime       String
-  roomNo        String?
-  maxMarks      Float
-  minMarks      Float
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id        Int     @id @default(autoincrement())
+  examId    Int
+  exam      Exam    @relation(fields: [examId], references: [id])
+  classId   Int
+  class     Class   @relation(fields: [classId], references: [id])
+  subjectId Int
+  subject   Subject @relation(fields: [subjectId], references: [id])
+
+  date      DateTime
+  startTime String
+  endTime   String
+  roomNo    String?
+  maxMarks  Float
+  minMarks  Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ExamResult {
-  id            Int       @id @default(autoincrement())
-  examId        Int
-  exam          Exam      @relation(fields: [examId], references: [id])
-  studentId     Int
-  student       Student   @relation(fields: [studentId], references: [id])
-  subjectId     Int
-  subject       Subject   @relation(fields: [subjectId], references: [id])
-  
+  id        Int     @id @default(autoincrement())
+  examId    Int
+  exam      Exam    @relation(fields: [examId], references: [id])
+  studentId Int
+  student   Student @relation(fields: [studentId], references: [id])
+  subjectId Int
+  subject   Subject @relation(fields: [subjectId], references: [id])
+
   marksObtained Float
   grade         String?
   remarks       String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Fee & Account Management
 
 model FeeGroup {
-  id            Int       @id @default(autoincrement())
-  name          String    // Tuition, Transport, Hostel
-  description   String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id          Int     @id @default(autoincrement())
+  name        String // Tuition, Transport, Hostel
+  description String?
 
-  types         FeeType[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  types FeeType[]
 }
 
 model FeeType {
-  id            Int       @id @default(autoincrement())
-  feeGroupId    Int
-  feeGroup      FeeGroup  @relation(fields: [feeGroupId], references: [id])
-  name          String    // Monthly Tuition, Exam Fee
-  code          String?
-  description   String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id          Int      @id @default(autoincrement())
+  feeGroupId  Int
+  feeGroup    FeeGroup @relation(fields: [feeGroupId], references: [id])
+  name        String // Monthly Tuition, Exam Fee
+  code        String?
+  description String?
 
-  structures    FeeStructure[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  structures FeeStructure[]
 }
 
 model FeeStructure {
-  id            Int       @id @default(autoincrement())
-  feeTypeId     Int
-  feeType       FeeType   @relation(fields: [feeTypeId], references: [id])
-  classId       Int
-  class         Class     @relation(fields: [classId], references: [id])
-  
-  amount        Float
-  dueDate       DateTime?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  
-  studentFees   StudentFee[]
+  id        Int     @id @default(autoincrement())
+  feeTypeId Int
+  feeType   FeeType @relation(fields: [feeTypeId], references: [id])
+  classId   Int
+  class     Class   @relation(fields: [classId], references: [id])
+
+  amount  Float
+  dueDate DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  studentFees StudentFee[]
 }
 
 model StudentFee {
-  id            Int       @id @default(autoincrement())
-  studentId     Int
-  student       Student   @relation(fields: [studentId], references: [id])
+  id             Int          @id @default(autoincrement())
+  studentId      Int
+  student        Student      @relation(fields: [studentId], references: [id])
   feeStructureId Int
-  feeStructure  FeeStructure @relation(fields: [feeStructureId], references: [id])
-  
-  amount        Float     // Can be overridden
-  discount      Float     @default(0)
-  fine          Float     @default(0)
-  paidAmount    Float     @default(0)
-  status        PaymentStatus @default(PENDING)
-  dueDate       DateTime
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  feeStructure   FeeStructure @relation(fields: [feeStructureId], references: [id])
 
-  payments      FeePayment[]
+  amount     Float // Can be overridden
+  discount   Float         @default(0)
+  fine       Float         @default(0)
+  paidAmount Float         @default(0)
+  status     PaymentStatus @default(PENDING)
+  dueDate    DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  payments FeePayment[]
 }
 
 model FeePayment {
-  id            Int       @id @default(autoincrement())
-  studentFeeId  Int
-  studentFee    StudentFee @relation(fields: [studentFeeId], references: [id])
-  
+  id           Int        @id @default(autoincrement())
+  studentFeeId Int
+  studentFee   StudentFee @relation(fields: [studentFeeId], references: [id])
+
   amount        Float
-  paymentDate   DateTime  @default(now())
+  paymentDate   DateTime      @default(now())
   method        PaymentMethod
   transactionId String?
   remarks       String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Expense {
-  id            Int       @id @default(autoincrement())
-  title         String
-  description   String?
-  amount        Float
-  date          DateTime
-  category      String?   // Maintenance, Salary, Utilities
-  invoiceNo     String?
-  file          String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  amount      Float
+  date        DateTime
+  category    String? // Maintenance, Salary, Utilities
+  invoiceNo   String?
+  file        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Library Management
 
 model BookCategory {
-  id            Int       @id @default(autoincrement())
-  name          String
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id   Int    @id @default(autoincrement())
+  name String
 
-  books         Book[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  books Book[]
 }
 
 model Book {
-  id            Int       @id @default(autoincrement())
-  title         String
-  author        String
-  isbn          String?
-  publisher     String?
-  categoryId    Int
-  category      BookCategory @relation(fields: [categoryId], references: [id])
-  
-  quantity      Int
-  available     Int
-  price         Float?
-  rackNo        String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id         Int          @id @default(autoincrement())
+  title      String
+  author     String
+  isbn       String?
+  publisher  String?
+  categoryId Int
+  category   BookCategory @relation(fields: [categoryId], references: [id])
 
-  issues        BookIssue[]
+  quantity  Int
+  available Int
+  price     Float?
+  rackNo    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  issues BookIssue[]
 }
 
 model BookIssue {
-  id            Int       @id @default(autoincrement())
-  bookId        Int
-  book          Book      @relation(fields: [bookId], references: [id])
-  studentId     Int?
-  student       Student?  @relation(fields: [studentId], references: [id])
-  staffId       Int?
-  staff         Staff?    @relation(fields: [staffId], references: [id]) // Staff can also borrow
-  
-  issueDate     DateTime  @default(now())
-  dueDate       DateTime
-  returnDate    DateTime?
-  status        BookStatus @default(ISSUED)
-  fine          Float     @default(0)
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id        Int      @id @default(autoincrement())
+  bookId    Int
+  book      Book     @relation(fields: [bookId], references: [id])
+  studentId Int?
+  student   Student? @relation(fields: [studentId], references: [id])
+  staffId   Int?
+  staff     Staff?   @relation(fields: [staffId], references: [id]) // Staff can also borrow
+
+  issueDate  DateTime   @default(now())
+  dueDate    DateTime
+  returnDate DateTime?
+  status     BookStatus @default(ISSUED)
+  fine       Float      @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Transport Module
 
 model Vehicle {
-  id            Int       @id @default(autoincrement())
-  vehicleNo     String    @unique
-  type          VehicleType
-  capacity      Int
-  driverName    String?
-  driverPhone   String?
-  licenseNo     String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id          Int         @id @default(autoincrement())
+  vehicleNo   String      @unique
+  type        VehicleType
+  capacity    Int
+  driverName  String?
+  driverPhone String?
+  licenseNo   String?
 
-  routes        TransportRoute[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  routes TransportRoute[]
 }
 
 model TransportRoute {
-  id            Int       @id @default(autoincrement())
-  title         String    // Route A, City Center
-  vehicleId     Int
-  vehicle       Vehicle   @relation(fields: [vehicleId], references: [id])
-  fare          Float
-  
-  driverId      Int?      // Link to Staff if driver is staff
-  driver        Staff?    @relation(fields: [driverId], references: [id])
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id        Int     @id @default(autoincrement())
+  title     String // Route A, City Center
+  vehicleId Int
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
+  fare      Float
 
-  stops         TransportStop[]
-  members       TransportMember[]
+  driverId Int? // Link to Staff if driver is staff
+  driver   Staff? @relation(fields: [driverId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stops   TransportStop[]
+  members TransportMember[]
 }
 
 model TransportStop {
-  id            Int       @id @default(autoincrement())
-  routeId       Int
-  route         TransportRoute @relation(fields: [routeId], references: [id])
-  name          String
-  pickupTime    String
-  dropTime      String
-  fare          Float?    // Additional fare if needed
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id         Int            @id @default(autoincrement())
+  routeId    Int
+  route      TransportRoute @relation(fields: [routeId], references: [id])
+  name       String
+  pickupTime String
+  dropTime   String
+  fare       Float? // Additional fare if needed
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model TransportMember {
-  id            Int       @id @default(autoincrement())
-  routeId       Int
-  route         TransportRoute @relation(fields: [routeId], references: [id])
-  studentId     Int
-  student       Student   @relation(fields: [studentId], references: [id])
-  
-  pickupPoint   String?
-  startDate     DateTime
-  endDate       DateTime?
-  status        Status    @default(ACTIVE)
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id        Int            @id @default(autoincrement())
+  routeId   Int
+  route     TransportRoute @relation(fields: [routeId], references: [id])
+  studentId Int
+  student   Student        @relation(fields: [studentId], references: [id])
+
+  pickupPoint String?
+  startDate   DateTime
+  endDate     DateTime?
+  status      Status    @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Inventory Module
 
 model InventoryCategory {
-  id            Int       @id @default(autoincrement())
-  name          String
-  description   String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
 
-  items         InventoryItem[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items InventoryItem[]
 }
 
 model InventoryItem {
-  id            Int       @id @default(autoincrement())
-  name          String
-  categoryId    Int
-  category      InventoryCategory @relation(fields: [categoryId], references: [id])
-  unit          String    // Pcs, Kg, Box
-  description   String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id          Int               @id @default(autoincrement())
+  name        String
+  categoryId  Int
+  category    InventoryCategory @relation(fields: [categoryId], references: [id])
+  unit        String // Pcs, Kg, Box
+  description String?
 
-  stocks        InventoryStock[]
-  issues        InventoryIssue[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stocks InventoryStock[]
+  issues InventoryIssue[]
 }
 
 model InventoryStock {
-  id            Int       @id @default(autoincrement())
+  id            Int           @id @default(autoincrement())
   itemId        Int
   item          InventoryItem @relation(fields: [itemId], references: [id])
   quantity      Int
   purchasePrice Float
   supplier      String?
   purchaseDate  DateTime
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model InventoryIssue {
-  id            Int       @id @default(autoincrement())
-  itemId        Int
-  item          InventoryItem @relation(fields: [itemId], references: [id])
-  issuedTo      String    // Staff Name or Department
-  issuedBy      Int       // User ID
-  quantity      Int
-  issueDate     DateTime  @default(now())
-  returnDate    DateTime?
-  note          String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id         Int           @id @default(autoincrement())
+  itemId     Int
+  item       InventoryItem @relation(fields: [itemId], references: [id])
+  issuedTo   String // Staff Name or Department
+  issuedBy   Int // User ID
+  quantity   Int
+  issueDate  DateTime      @default(now())
+  returnDate DateTime?
+  note       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Communication & Others
 
 model Notice {
-  id            Int       @id @default(autoincrement())
-  title         String
-  content       String
-  postedBy      Int       // User ID
-  targetRole    Role[]    // Array of roles who can see this
-  date          DateTime  @default(now())
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id         Int      @id @default(autoincrement())
+  title      String
+  content    String
+  postedBy   Int // User ID
+  targetRole Role[] // Array of roles who can see this
+  date       DateTime @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Message {
-  id            Int       @id @default(autoincrement())
-  senderId      Int
-  sender        User      @relation("SentMessages", fields: [senderId], references: [id])
-  receiverId    Int
-  receiver      User      @relation("ReceivedMessages", fields: [receiverId], references: [id])
-  content       String
-  isRead        Boolean   @default(false)
-  sentAt        DateTime  @default(now())
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id         Int      @id @default(autoincrement())
+  senderId   Int
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId Int
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  content    String
+  isRead     Boolean  @default(false)
+  sentAt     DateTime @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Notification {
-  id            Int       @id @default(autoincrement())
-  userId        Int
-  user          User      @relation(fields: [userId], references: [id])
-  title         String
-  message       String
-  type          String?   // Info, Warning, Alert
-  isRead        Boolean   @default(false)
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id      Int     @id @default(autoincrement())
+  userId  Int
+  user    User    @relation(fields: [userId], references: [id])
+  title   String
+  message String
+  type    String? // Info, Warning, Alert
+  isRead  Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Certificate {
-  id            Int       @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   studentId     Int
-  student       Student   @relation(fields: [studentId], references: [id])
-  type          String    // Leaving, Merit, Sports
+  student       Student  @relation(fields: [studentId], references: [id])
+  type          String // Leaving, Merit, Sports
   issueDate     DateTime
-  certificateNo String    @unique
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  certificateNo String   @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model DisciplineRecord {
-  id            Int       @id @default(autoincrement())
-  studentId     Int
-  student       Student   @relation(fields: [studentId], references: [id])
-  title         String    // Late coming, Misbehavior
-  description   String?
-  actionTaken   String?
-  date          DateTime  @default(now())
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id          Int      @id @default(autoincrement())
+  studentId   Int
+  student     Student  @relation(fields: [studentId], references: [id])
+  title       String // Late coming, Misbehavior
+  description String?
+  actionTaken String?
+  date        DateTime @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Visitor {
-  id            Int       @id @default(autoincrement())
-  name          String
-  phone         String
-  purpose       String
-  personToMeet  String
-  checkIn       DateTime  @default(now())
-  checkOut      DateTime?
-  idProof       String?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id           Int       @id @default(autoincrement())
+  name         String
+  phone        String
+  purpose      String
+  personToMeet String
+  checkIn      DateTime  @default(now())
+  checkOut     DateTime?
+  idProof      String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Alumni {
-  id            Int       @id @default(autoincrement())
+  id            Int     @id @default(autoincrement())
   name          String
   passOutYear   String
   course        String?
   email         String?
   phone         String?
-  currentStatus String?   // Working, Studying
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  currentStatus String? // Working, Studying
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model VideoLibrary {
-  id            Int       @id @default(autoincrement())
-  title         String
-  description   String?
-  url           String
-  classId       Int?      // Optional: specific to class
-  subjectId     Int?      // Optional: specific to subject
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String?
+  url         String
+  classId     Int? // Optional: specific to class
+  subjectId   Int? // Optional: specific to subject
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
