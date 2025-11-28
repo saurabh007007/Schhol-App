@@ -1,0 +1,717 @@
+@baseUrl = http://localhost:3000/api/v2
+@authToken = {{login.response.body.token}}
+
+### ------------------------------------------------------------------------
+### AUTHENTICATION
+### ------------------------------------------------------------------------
+
+### Signup (Admin)
+# @name signup
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{
+  "email": "admin@school.com",
+  "username": "admin",
+  "password": "password123",
+  "role": "ADMIN"
+}
+
+### Login
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@school.com",
+  "password": "password123"
+}
+
+### Get Current User Profile
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{authToken}}
+
+### Logout
+GET {{baseUrl}}/auth/logout
+
+### ------------------------------------------------------------------------
+### SETTINGS
+### ------------------------------------------------------------------------
+
+### Create School Profile
+POST {{baseUrl}}/settings/school-profile
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Springfield High School",
+  "address": "742 Evergreen Terrace",
+  "phone": "555-0123",
+  "email": "info@springfield.edu",
+  "website": "https://springfield.edu",
+  "currency": "USD",
+  "language": "en",
+  "timezone": "UTC",
+  "academicYear": "2024-2025"
+}
+
+### Get School Profile
+GET {{baseUrl}}/settings/school-profile
+Authorization: Bearer {{authToken}}
+
+### Update School Profile
+PUT {{baseUrl}}/settings/school-profile
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Springfield High School Updated",
+  "address": "742 Evergreen Terrace",
+  "phone": "555-0123",
+  "email": "info@springfield.edu",
+  "academicYear": "2024-2025"
+}
+
+### Create Academic Year
+POST {{baseUrl}}/settings/academic-years
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "2024-2025",
+  "startDate": "2024-04-01",
+  "endDate": "2025-03-31",
+  "isCurrent": true
+}
+
+### Get Academic Years
+GET {{baseUrl}}/settings/academic-years
+Authorization: Bearer {{authToken}}
+
+### Update Academic Year
+PUT {{baseUrl}}/settings/academic-years/1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "2024-2025 Extended",
+  "startDate": "2024-04-01",
+  "endDate": "2025-04-15",
+  "isCurrent": true
+}
+
+### Delete Academic Year
+DELETE {{baseUrl}}/settings/academic-years/1
+Authorization: Bearer {{authToken}}
+
+### Create Session
+POST {{baseUrl}}/settings/sessions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Term 1",
+  "startDate": "2024-04-01",
+  "endDate": "2024-09-30",
+  "academicYearId": 1
+}
+
+### Get Sessions
+GET {{baseUrl}}/settings/sessions
+Authorization: Bearer {{authToken}}
+
+### ------------------------------------------------------------------------
+### STAFF MANAGEMENT
+### ------------------------------------------------------------------------
+
+### Create Department
+POST {{baseUrl}}/staff/departments
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Science",
+  "description": "Science Department"
+}
+
+### Get Departments
+GET {{baseUrl}}/staff/departments/all
+Authorization: Bearer {{authToken}}
+
+### Create Staff
+POST {{baseUrl}}/staff
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "firstName": "Edna",
+  "lastName": "Krabappel",
+  "email": "edna@springfield.edu",
+  "phone": "5551112222",
+  "dateOfBirth": "1980-01-01",
+  "gender": "FEMALE",
+  "qualification": "M.Ed",
+  "joiningDate": "2020-01-01",
+  "designation": "Teacher",
+  "departmentId": 1,
+  "role": "TEACHER",
+  "password": "password123"
+}
+
+### Get All Staff
+GET {{baseUrl}}/staff
+Authorization: Bearer {{authToken}}
+
+### Get Staff By ID
+GET {{baseUrl}}/staff/1
+Authorization: Bearer {{authToken}}
+
+### Update Staff
+PUT {{baseUrl}}/staff/1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "firstName": "Edna",
+  "lastName": "Flanders"
+}
+
+### Delete Staff
+DELETE {{baseUrl}}/staff/1
+Authorization: Bearer {{authToken}}
+
+### ------------------------------------------------------------------------
+### ACADEMIC MANAGEMENT
+### ------------------------------------------------------------------------
+
+### Create Class
+POST {{baseUrl}}/academic/classes
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Grade 4",
+  "numeric": 4,
+  "classTeacherId": 1
+}
+
+### Get Classes
+GET {{baseUrl}}/academic/classes
+Authorization: Bearer {{authToken}}
+
+### Create Section
+POST {{baseUrl}}/academic/sections
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "A",
+  "classId": 1,
+  "capacity": 30
+}
+
+### Get Sections
+GET {{baseUrl}}/academic/sections
+Authorization: Bearer {{authToken}}
+
+### Create Subject
+POST {{baseUrl}}/academic/subjects
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Mathematics",
+  "code": "MATH101",
+  "type": "THEORY"
+}
+
+### Get Subjects
+GET {{baseUrl}}/academic/subjects
+Authorization: Bearer {{authToken}}
+
+### Create Subject Allocation
+POST {{baseUrl}}/academic/allocations
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "classId": 1,
+  "subjectId": 1,
+  "teacherId": 1
+}
+
+### Get Allocations
+GET {{baseUrl}}/academic/allocations
+Authorization: Bearer {{authToken}}
+
+### ------------------------------------------------------------------------
+### STUDENT MANAGEMENT
+### ------------------------------------------------------------------------
+
+### Create Student
+POST {{baseUrl}}/student
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "firstName": "Bart",
+  "lastName": "Simpson",
+  "dateOfBirth": "2014-04-01",
+  "gender": "MALE",
+  "admissionNo": "ADM001",
+  "classId": 1,
+  "sectionId": 1,
+  "academicYearId": 1,
+  "password": "password123",
+  "parentDetails": {
+    "fatherName": "Homer Simpson",
+    "motherName": "Marge Simpson",
+    "email": "homer@springfield.edu",
+    "phone": "5553334444",
+    "password": "password123"
+  }
+}
+
+### Get All Students
+GET {{baseUrl}}/student
+Authorization: Bearer {{authToken}}
+
+### Get Student By ID
+GET {{baseUrl}}/student/1
+Authorization: Bearer {{authToken}}
+
+### Update Student
+PUT {{baseUrl}}/student/1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "firstName": "Bartholomew"
+}
+
+### Get All Parents
+GET {{baseUrl}}/student/parents/all
+Authorization: Bearer {{authToken}}
+
+### ------------------------------------------------------------------------
+### ATTENDANCE
+### ------------------------------------------------------------------------
+
+### Mark Student Attendance
+POST {{baseUrl}}/attendance/student
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "studentId": 1,
+  "date": "2024-05-01",
+  "status": "PRESENT"
+}
+
+### Mark Bulk Student Attendance
+POST {{baseUrl}}/attendance/student/bulk
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "date": "2024-05-01",
+  "classId": 1,
+  "sectionId": 1,
+  "students": [
+    { "studentId": 1, "status": "PRESENT" }
+  ]
+}
+
+### Get Student Attendance
+GET {{baseUrl}}/attendance/student?studentId=1
+Authorization: Bearer {{authToken}}
+
+### Mark Staff Attendance
+POST {{baseUrl}}/attendance/staff
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "staffId": 1,
+  "date": "2024-05-01",
+  "status": "PRESENT",
+  "checkIn": "2024-05-01T08:00:00Z",
+  "checkOut": "2024-05-01T16:00:00Z"
+}
+
+### Get Staff Attendance
+GET {{baseUrl}}/attendance/staff
+Authorization: Bearer {{authToken}}
+
+### ------------------------------------------------------------------------
+### LEAVE MANAGEMENT
+### ------------------------------------------------------------------------
+
+### Apply Leave
+POST {{baseUrl}}/leave/apply
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "staffId": 1,
+  "type": "SICK",
+  "startDate": "2024-06-01",
+  "endDate": "2024-06-02",
+  "reason": "Flu"
+}
+
+### Get Leave Applications
+GET {{baseUrl}}/leave/applications
+Authorization: Bearer {{authToken}}
+
+### Update Leave Status
+PUT {{baseUrl}}/leave/applications/1/status
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "status": "APPROVED",
+  "approvedBy": 1
+}
+
+### Create Holiday
+POST {{baseUrl}}/leave/holidays
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "title": "Summer Break",
+  "startDate": "2024-07-01",
+  "endDate": "2024-07-31",
+  "type": "PUBLIC"
+}
+
+### Get Holidays
+GET {{baseUrl}}/leave/holidays
+Authorization: Bearer {{authToken}}
+
+### ------------------------------------------------------------------------
+### FEE MANAGEMENT
+### ------------------------------------------------------------------------
+
+### Create Fee Group
+POST {{baseUrl}}/fee/groups
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Tuition Fees"
+}
+
+### Create Fee Type
+POST {{baseUrl}}/fee/types
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Term 1 Tuition",
+  "feeGroupId": 1
+}
+
+### Create Fee Structure
+POST {{baseUrl}}/fee/structures
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "feeTypeId": 1,
+  "classId": 1,
+  "amount": 5000,
+  "academicYearId": 1,
+  "dueDate": "2024-04-15"
+}
+
+### Assign Fees to Student
+POST {{baseUrl}}/fee/assign
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "studentId": 1,
+  "feeStructureIds": [1]
+}
+
+### Get Student Fees
+GET {{baseUrl}}/fee/student/1
+Authorization: Bearer {{authToken}}
+
+### Collect Fee Payment
+POST {{baseUrl}}/fee/payment
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "studentFeeId": 1,
+  "amount": 5000,
+  "method": "CASH"
+}
+
+### Create Expense
+POST {{baseUrl}}/fee/expenses
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "title": "Office Supplies",
+  "amount": 150,
+  "date": "2024-05-10",
+  "category": "Stationery"
+}
+
+### Get Expenses
+GET {{baseUrl}}/fee/expenses
+Authorization: Bearer {{authToken}}
+
+### ------------------------------------------------------------------------
+### LIBRARY MANAGEMENT
+### ------------------------------------------------------------------------
+
+### Create Book Category
+POST {{baseUrl}}/library/categories
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Fiction"
+}
+
+### Create Book
+POST {{baseUrl}}/library/books
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "title": "The Great Gatsby",
+  "author": "F. Scott Fitzgerald",
+  "categoryId": 1,
+  "quantity": 5
+}
+
+### Get Books
+GET {{baseUrl}}/library/books
+Authorization: Bearer {{authToken}}
+
+### Issue Book
+POST {{baseUrl}}/library/issue
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "bookId": 1,
+  "studentId": 1,
+  "dueDate": "2024-05-20"
+}
+
+### Get Issued Books
+GET {{baseUrl}}/library/issued
+Authorization: Bearer {{authToken}}
+
+### Return Book
+POST {{baseUrl}}/library/return/1
+Authorization: Bearer {{authToken}}
+
+### ------------------------------------------------------------------------
+### TRANSPORT MANAGEMENT
+### ------------------------------------------------------------------------
+
+### Create Vehicle
+POST {{baseUrl}}/transport/vehicles
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "vehicleNo": "BUS-01",
+  "type": "BUS",
+  "capacity": 40
+}
+
+### Create Route
+POST {{baseUrl}}/transport/routes
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "title": "Route A",
+  "vehicleId": 1,
+  "fare": 1000
+}
+
+### Create Stop
+POST {{baseUrl}}/transport/stops
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "routeId": 1,
+  "name": "Main Street",
+  "pickupTime": "07:30",
+  "dropTime": "15:30"
+}
+
+### Assign Transport
+POST {{baseUrl}}/transport/members
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "routeId": 1,
+  "studentId": 1,
+  "startDate": "2024-04-01"
+}
+
+### ------------------------------------------------------------------------
+### INVENTORY MANAGEMENT
+### ------------------------------------------------------------------------
+
+### Create Inventory Category
+POST {{baseUrl}}/inventory/categories
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Electronics"
+}
+
+### Create Item
+POST {{baseUrl}}/inventory/items
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Projector",
+  "categoryId": 1,
+  "unit": "Piece"
+}
+
+### Add Stock
+POST {{baseUrl}}/inventory/stock
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "itemId": 1,
+  "quantity": 2,
+  "purchasePrice": 500,
+  "purchaseDate": "2024-01-15"
+}
+
+### Issue Item
+POST {{baseUrl}}/inventory/issue
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "itemId": 1,
+  "issuedTo": "Science Dept",
+  "issuedBy": 1,
+  "quantity": 1
+}
+
+### Return Item
+POST {{baseUrl}}/inventory/return/1
+Authorization: Bearer {{authToken}}
+
+### ------------------------------------------------------------------------
+### COMMUNICATION
+### ------------------------------------------------------------------------
+
+### Create Notice
+POST {{baseUrl}}/communication/notices
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "title": "School Closed",
+  "content": "School will be closed tomorrow due to heavy rain.",
+  "postedBy": 1,
+  "targetRole": ["STUDENT", "PARENT"]
+}
+
+### Get Notices
+GET {{baseUrl}}/communication/notices
+Authorization: Bearer {{authToken}}
+
+### Create Event
+POST {{baseUrl}}/communication/events
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "title": "Annual Sports Day",
+  "startDate": "2024-12-10",
+  "endDate": "2024-12-10"
+}
+
+### Get Events
+GET {{baseUrl}}/communication/events
+Authorization: Bearer {{authToken}}
+
+### ------------------------------------------------------------------------
+### EXAM MANAGEMENT
+### ------------------------------------------------------------------------
+
+### Create Exam
+POST {{baseUrl}}/exam/exams
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Mid Term Exam",
+  "startDate": "2024-10-01",
+  "endDate": "2024-10-10",
+  "subjectAllocationId": 1
+}
+
+### Create Exam Schedule
+POST {{baseUrl}}/exam/schedules
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "examId": 1,
+  "classId": 1,
+  "subjectId": 1,
+  "date": "2024-10-02",
+  "startTime": "09:00",
+  "endTime": "12:00",
+  "maxMarks": 100,
+  "minMarks": 35
+}
+
+### Add Exam Result
+POST {{baseUrl}}/exam/results
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "examId": 1,
+  "studentId": 1,
+  "subjectId": 1,
+  "marksObtained": 85,
+  "grade": "A"
+}
+
+### Get Exam Results
+GET {{baseUrl}}/exam/results?studentId=1
+Authorization: Bearer {{authToken}}
+
+### ------------------------------------------------------------------------
+### DASHBOARD
+### ------------------------------------------------------------------------
+
+### Get Dashboard Stats
+GET {{baseUrl}}/dashboard/stats
+Authorization: Bearer {{authToken}}
+
+### Get Recent Activities
+GET {{baseUrl}}/dashboard/activities
+Authorization: Bearer {{authToken}}
+
+### Get Attendance Overview
+GET {{baseUrl}}/dashboard/attendance
+Authorization: Bearer {{authToken}}
