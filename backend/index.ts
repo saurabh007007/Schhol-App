@@ -18,18 +18,15 @@ import dashboardRoutes from "./routes/dashboard.routes";
 import dotenv from "dotenv";
 import cors from "cors";
 
-
-
 const app = express();
 
-// const corsOptions = {
-//   origin: "*", // frontend URL
-//   credentials: true, // to allow cookies to be sent
-// };
-app.use(cookieParser())
+const corsOptions = {
+  origin: ["http://localhost:5173", "https://schoolapp.vercel.app"], // frontend URL
+  credentials: true, // to allow cookies to be sent
+};
+app.use(cookieParser());
 // app.use(cors(corsOptions));
-app.use(cors({ origin: "*", credentials: true }));
-
+app.use(cors(corsOptions));
 
 dotenv.config();
 console.log("process.env.JWT_SECRET", process.env.JWT_SECRET);
