@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
-  allowedRole = "recruiter",
+  allowedRole = "student",
 }) => {
   const user = useAuthStore((state) => state.user);
   const navigate = useNavigate();
