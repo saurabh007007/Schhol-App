@@ -1,3 +1,17 @@
+import { useState } from "react";
+
 export const Signup = () => {
-  return <div>Signup</div>;
+  const [data, SetData] = useState({
+    email: "",
+    username: "",
+    password: "",
+    role: "",
+  });
+  return (
+    <>
+      <div className="flex items-center">
+        <form></form>
+      </div>
+    </>
+  );
 };

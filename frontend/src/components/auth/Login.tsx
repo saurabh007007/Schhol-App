@@ -3,7 +3,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export const Login = () => {
@@ -12,6 +12,7 @@ export const Login = () => {
     password: "",
     role: "",
   });
+  const navigate = useNavigate();
 
   const [errors, setErrors] = useState({
     email: "",
@@ -72,6 +73,7 @@ export const Login = () => {
       const result = await response.json();
       if (response.ok) {
         toast.success("Login successful!");
+        navigate("/dashboard");
       } else {
         toast.error(result.message || "Invalid credentials");
       }
